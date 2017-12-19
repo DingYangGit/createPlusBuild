@@ -2,6 +2,7 @@ package plugin;
 
 import com.intellij.openapi.command.WriteCommandAction;
 import com.intellij.psi.*;
+import org.bouncycastle.util.Strings;
 import plugin.util.PsiUtil;
 import plugin.util.StringUtil;
 
@@ -63,7 +64,7 @@ public class TextGenerator {
                                 && ("set".equals(psiMethod.getName().substring(0, 3))
                                 && psiMethod.getParameterList().getParametersCount() == 1)
                 ).collect(Collectors.toMap(PsiMethod::getName, psiMethod -> psiMethod));
-        Map<String, PsiMethod> psiMethodsGuestGet =
+        Map<String, PsiMethod> psiMethodsSourceGet =
                 psiMethodsSource.stream().filter(psiMethod ->
                         !psiMethod.isConstructor()
                                 && ("get".equals(psiMethod.getName().substring(0, 3))
@@ -77,18 +78,43 @@ public class TextGenerator {
                 .append("new ")
                 .append(destClass.getName())
                 .append("();\n");
-        psiMethodsDestSet.forEach((methodName, psiMethod) -> {
-                    PsiMethod matchedPsiMethodGet = psiMethodsGuestGet.get("get" + methodName.substring(3));
-                    if (matchedPsiMethodGet != null) {
+        psiMethodsDestSet.forEach((methodNameSet, psiMethodSet) -> {
+                    PsiMethod matchedPsiMethodGet = psiMethodsSourceGet
+                            .get("get" + methodNameSet.substring(3));
+                    if (matchedPsiMethodGet != null
+                            && psiMethodSet.getParameterList().getParameters()[0].getType()
+                            .equals(matchedPsiMethodGet.getReturnType())) {
                         methodBody.append(StringUtil.toLowerStanding(destClass.getName()))
                                 .append(".")
-                                .append(methodName)
+                                .append(methodNameSet)
                                 .append("(")
                                 .append(StringUtil.toLowerStanding(sourceClass.getName()))
                                 .append(".")
                                 .append(matchedPsiMethodGet.getName())
                                 .append("());\n");
+                        return;
                     }
+                    for (Map.Entry<String, PsiMethod> entry: psiMethodsSourceGet.entrySet()) {
+                        String methodNameGet = entry.getKey();
+                        PsiMethod psiMethodGet = entry.getValue();
+                        if (methodNameSet.substring(3).equalsIgnoreCase(methodNameGet.substring(3))
+                                && psiMethodSet.getParameterList().getParameters()[0].getType()
+                                .equals(psiMethodGet.getReturnType())) {
+                            methodBody.append(StringUtil.toLowerStanding(destClass.getName()))
+                                    .append(".")
+                                    .append(methodNameSet)
+                                    .append("(")
+                                    .append(StringUtil.toLowerStanding(sourceClass.getName()))
+                                    .append(".")
+                                    .append(psiMethodGet.getName())
+                                    .append("());\n");
+                            return;
+                        }
+                    }
+                    methodBody.append(StringUtil.toLowerStanding(destClass.getName()))
+                            .append(".")
+                            .append(methodNameSet)
+                            .append("(...);\n");
                 }
         );
         methodBody.append("return ")
@@ -108,6 +134,8 @@ public class TextGenerator {
                 .append(methodBody)
                 .append("}").toString();
     }
+
+
 
     private PsiMethod createMethod(String methodText) {
         return elementFactory.createMethodFromText(methodText, destClass);

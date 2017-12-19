@@ -1,13 +1,12 @@
 <idea-plugin>
   <id>com.yangding</id>
   <name>createPlusBuild</name>
-  <version>1.0.1</version>
+  <version>1.0.2</version>
   <vendor email="yangding1991@gmail.com" url="https://github.com/DingYangGit">yangding</vendor>
 
   <description><![CDATA[
       Intellij Idea plugin to create Java create/build method for a class.<br>
       Usage: Code | generate -> Generate create/build..<br>
-      <em>
       Function: Provided two classes A and B:<br>
       <p>
 	<div class="line number1 index0 alt2" style="margin:0px;padding:0px 1em 0px 0px;background:0px center #FFFFFF;border:0px;vertical-align:baseline;font-family:Consolas, &quot;font-size:14px;color:#333333;">
@@ -38,21 +37,27 @@ It can generate<br>
     a.setId(b.getId());
     return a;
 }</pre>
-      </em>
     ]]></description>
 
   <change-notes><![CDATA[
-      <em>
-      <p>
+    <p>
+	Version 1.0.2:
+	</p>
+	<p>
+	* Support all set method initialization
+	</p>
+	<p>
+	* Support case ignore on method name match
+	</p>
+	<p>
 	Version 1.0.1:
-</p>
-<p>
+	</p>
+	<p>
 	* Support IDEA version since <span><span style="font-size:14px;">IntelliJ IDEA 13</span></span>
-</p>
-<p>
-	* Support nont-project select option in Class chooser
-</p>
-      </em>
+	</p>
+	<p>
+	* Support non-project select option in Class chooser
+	</p>
     ]]>
   </change-notes>
 
