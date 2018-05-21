@@ -41,6 +41,12 @@ It can generate<br>
 
   <change-notes><![CDATA[
     <p>
+	Version 1.0.3:
+	</p>
+	<p>
+	* Support primitive dataType match
+	</p>
+    <p>
 	Version 1.0.2:
 	</p>
 	<p>

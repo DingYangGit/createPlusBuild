@@ -81,9 +81,8 @@ public class TextGenerator {
         psiMethodsDestSet.forEach((methodNameSet, psiMethodSet) -> {
                     PsiMethod matchedPsiMethodGet = psiMethodsSourceGet
                             .get("get" + methodNameSet.substring(3));
-                    if (matchedPsiMethodGet != null
-                            && psiMethodSet.getParameterList().getParameters()[0].getType()
-                            .equals(matchedPsiMethodGet.getReturnType())) {
+                    if (matchedPsiMethodGet != null && matchedPsiMethodGet.getReturnType() != null
+                            && psiMethodSet.getParameterList().getParameters()[0].getType().isConvertibleFrom(matchedPsiMethodGet.getReturnType())) {
                         methodBody.append(StringUtil.toLowerStanding(destClass.getName()))
                                 .append(".")
                                 .append(methodNameSet)
