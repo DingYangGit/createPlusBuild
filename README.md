@@ -1,7 +1,7 @@
 # createPlusBuild
 idea plugin for java code generate
 provided
-```
+```java
 public class A {
     private Integer id;
 
@@ -23,7 +23,7 @@ public class B {
     }
 ```
 It can generate
-```
+```java
 public A create(B b) {
     A a = new A();
     a.setId(b.getId());
