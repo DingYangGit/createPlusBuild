@@ -1,6 +1,7 @@
 # createPlusBuild
-idea plugin for java code generate
-provided
+idea plugin for java code generate.
+To use it, search createPlusBuild in idea plugin repository.
+As is the function, provided
 ```java
 public class A {
     private Integer id;
